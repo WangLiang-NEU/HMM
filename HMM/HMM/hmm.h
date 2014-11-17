@@ -20,4 +20,5 @@ void copyHMM(HMM* h1,HMM*h2);
 void freeHMM(HMM* hmm);
 
 void Forward(HMM *phmm, int T, int *O, double **alpha, double *pprob);
+void Viterbi(HMM *phmm, int T, int *O, double **delta, int **psi, int *q, double *pprob);
 #endif
