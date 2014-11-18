@@ -48,7 +48,7 @@ void Forward(HMM *phmm, int T, int *O, double **alpha, double *pprob)
 	T: 观察序列长度
 	*O：观察序列
 	**delta: 局部概率
-	**psi：记录每一步的最优状态索引
+	**psi：pis[i][j]记录每一步的最优状态索引,t+1时刻位于达状态i，是由t时刻位于状j转移的
 	*q:最优路径
 	*pprob：最优解
 */
@@ -103,5 +103,43 @@ void Viterbi(HMM *phmm, int T, int *O, double **delta, int **psi, int *q, double
 	for (t=T-1;t>0;t--)
 	{
 		q[t]=psi[t+1][q[t+1]];
+	}
+}
+/*
+	后向算法
+	**phmm: 已知模型
+	T:序列长度
+	*O:观察序列
+	**beta: 后向局部概率
+	*pprob: 最终概率
+*/
+void Backward(HMM *phmm,int T, int *O, double **beta, double *pprob)
+{
+	int i,j; //状态索引
+	int t;   //时间索引；
+	double sum;
+
+	/*1.Initialization*/
+	for (i=1;i<=phmm->N;i++)
+	{
+		beta[T][i]=1;
+	}
+	/*2.Induction*/
+	for (t=T-1;t>=1;t--)
+	{
+		for (j=1;j<phmm->N;j++)
+		{
+			sum=0.0;
+			for (i=1;i<=phmm->N;i++)
+			{
+				sum+=phmm->A[j][i]*(phmm->B[i][O[t+1]])*beta[t+1][i];
+			}
+		}
+	}
+	/*3.Termination*/
+	*pprob=0.0;
+	for(i=1;i<=phmm->N;i++)
+	{
+		*pprob+=beta[1][i];
 	}
 }
