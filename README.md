@@ -1,4 +1,7 @@
 HMM
 ===
 
-hidden markov model
+Hello, World!  
+This is a test message
+
+Hidden Markov Model
